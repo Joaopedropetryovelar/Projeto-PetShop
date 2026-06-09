@@ -1,216 +1,97 @@
 import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { addDoc, collection } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { database } from '../../../FireBaseConfig';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Alert,
-} from 'react-native';
-
-// import * as ImagePicker from 'expo-image-picker';
-
-export default function CadastroPetScreen() {
-  const [imagem, setImagem] = useState(null);
-
+export default function CadastroPetScreen({navigation}) {
   const [nome, setNome] = useState('');
   const [raca, setRaca] = useState('');
   const [idade, setIdade] = useState('');
   const [peso, setPeso] = useState('');
   const [sexo, setSexo] = useState('');
-  const [castrado, setCastrado] =
-    useState('');
-
-  const [alergia, setAlergia] =
-    useState('');
-
+  const [castrado, setCastrado] = useState('');
+  const [alergia, setAlergia] = useState('');
   const [obs, setObs] = useState('');
 
-  async function selecionarImagem() {
-    const permission =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+  async function salvarPet() {
+    // Pega o usuário logado para associar o pet a ele
+    const auth = getAuth();
+    const usuario = auth.currentUser;
 
-    if (!permission.granted) {
-      Alert.alert(
-        'Permissão necessária'
-      );
-
+    if (!usuario) {
+      Alert.alert('Erro', 'Nenhum usuário logado.');
       return;
     }
 
-    const result =
-      await ImagePicker.launchImageLibraryAsync({
-        mediaTypes:
-          ImagePicker.MediaTypeOptions.Images,
-
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
+    try {
+      await addDoc(collection(database, 'Pets'), {
+        nome,
+        raca,
+        idade,
+        peso,
+        sexo,
+        castrado,
+        alergia,
+        obs,
+        uid: usuario.uid, // <-- salva o dono do pet
       });
-
-    if (!result.canceled) {
-      setImagem(result.assets[0].uri);
+      setNome(''); setRaca(''); setIdade(''); setPeso('');
+      setSexo(''); setCastrado(''); setAlergia(''); setObs('');
+      Alert.alert('Pet cadastrado com sucesso!');
+      navigation.navigate('Principal')
+    } catch (erro) {
+      console.log('erro ao cadastrar', erro);
+      Alert.alert('Erro ao cadastrar pet.');
     }
-  }
-
-  function salvarPet() {
-    if (!nome || !raca) {
-      Alert.alert(
-        'Erro',
-        'Preencha os campos principais'
-      );
-
-      return;
-    }
-
-    Alert.alert(
-      'Sucesso ',
-      'Pet cadastrado com sucesso!'
-    );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>
-        Cadastro do Pet 
-      </Text>
+      <Text style={styles.titulo}>Cadastro do Pet</Text>
 
-      <TouchableOpacity
-        style={styles.imageContainer}
-        onPress={selecionarImagem}
-      >
-        {imagem ? (
-          <Image
-            source={{ uri: imagem }}
-            style={styles.image}
-          />
-        ) : (
-          <Text style={styles.imageText}>
-            Adicionar Foto
-          </Text>
-        )}
-      </TouchableOpacity>
+      <TextInput placeholder="Nome do Pet" style={styles.input} value={nome} onChangeText={setNome} />
+      <TextInput placeholder="Raça" style={styles.input} value={raca} onChangeText={setRaca} />
+      <TextInput placeholder="Idade" style={styles.input} value={idade} onChangeText={setIdade} />
+      <TextInput placeholder="Peso" style={styles.input} value={peso} onChangeText={setPeso} />
 
-      <TextInput
-        placeholder="Nome do Pet"
-        style={styles.input}
-        value={nome}
-        onChangeText={setNome}
-      />
-
-      <TextInput
-        placeholder="Raça"
-        style={styles.input}
-        value={raca}
-        onChangeText={setRaca}
-      />
-
-      <TextInput
-        placeholder="Idade"
-        style={styles.input}
-        value={idade}
-        onChangeText={setIdade}
-      />
-
-      <TextInput
-        placeholder="Peso"
-        style={styles.input}
-        value={peso}
-        onChangeText={setPeso}
-      />
-
-      <Text style={styles.section}>
-        Sexo
-      </Text>
-
-      <View style={styles.row}>
-        <TouchableOpacity
-          style={[
-            styles.option,
-            sexo === 'Macho' &&
-              styles.selected,
-          ]}
-          onPress={() =>
-            setSexo('Macho')
-          }
-        >
-          <Text>Macho</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.option,
-            sexo === 'Fêmea' &&
-              styles.selected,
-          ]}
-          onPress={() =>
-            setSexo('Fêmea')
-          }
-        >
-          <Text>Fêmea</Text>
-        </TouchableOpacity>
+      <Text style={styles.secao}>Sexo</Text>
+      <View style={styles.linha}>
+        {['Macho', 'Fêmea'].map((opcao) => (
+          <TouchableOpacity
+            key={opcao}
+            style={[styles.opcao, sexo === opcao && styles.selecionado]}
+            onPress={() => setSexo(opcao)}
+          >
+            <Text>{opcao}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
-      <Text style={styles.section}>
-        Castrado?
-      </Text>
-
-      <View style={styles.row}>
-        <TouchableOpacity
-          style={[
-            styles.option,
-            castrado === 'Sim' &&
-              styles.selected,
-          ]}
-          onPress={() =>
-            setCastrado('Sim')
-          }
-        >
-          <Text>Sim</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.option,
-            castrado === 'Não' &&
-              styles.selected,
-          ]}
-          onPress={() =>
-            setCastrado('Não')
-          }
-        >
-          <Text>Não</Text>
-        </TouchableOpacity>
+      <Text style={styles.secao}>Castrado?</Text>
+      <View style={styles.linha}>
+        {['Sim', 'Não'].map((opcao) => (
+          <TouchableOpacity
+            key={opcao}
+            style={[styles.opcao, castrado === opcao && styles.selecionado]}
+            onPress={() => setCastrado(opcao)}
+          >
+            <Text>{opcao}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
-      <TextInput
-        placeholder="Possui alergia?"
-        style={styles.input}
-        value={alergia}
-        onChangeText={setAlergia}
-      />
-
+      <TextInput placeholder="Possui alergia?" style={styles.input} value={alergia} onChangeText={setAlergia} />
       <TextInput
         placeholder="Observações"
-        style={[
-          styles.input,
-          styles.textArea,
-        ]}
+        style={[styles.input, styles.areaTexto]}
         multiline
         value={obs}
         onChangeText={setObs}
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={salvarPet}
-      >
-        <Text style={styles.buttonText}>
-          Salvar Pet
-        </Text>
+      <TouchableOpacity style={styles.botao} onPress={salvarPet}>
+        <Text style={styles.textoBotao}>Cadastrar Pet</Text>
       </TouchableOpacity>
 
       <View style={{ height: 50 }} />
@@ -225,84 +106,50 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 70,
   },
-
-  title: {
+  titulo: {
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 30,
   },
-
-  imageContainer: {
-    width: 160,
-    height: 160,
-    borderRadius: 100,
-    backgroundColor: '#E5E7EB',
-
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    alignSelf: 'center',
-    marginBottom: 30,
-
-    overflow: 'hidden',
-  },
-
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-
-  imageText: {
-    color: '#6B7280',
-    fontWeight: 'bold',
-  },
-
   input: {
     backgroundColor: '#FFF',
     padding: 18,
     borderRadius: 18,
     marginBottom: 18,
   },
-
-  section: {
+  secao: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 14,
     marginTop: 10,
   },
-
-  row: {
+  linha: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-
-  option: {
+  opcao: {
     backgroundColor: '#FFF',
     width: '47%',
     padding: 18,
     borderRadius: 18,
     alignItems: 'center',
   },
-
-  selected: {
+  selecionado: {
     backgroundColor: '#86EFAC',
   },
-
-  textArea: {
+  areaTexto: {
     height: 120,
     textAlignVertical: 'top',
   },
-
-  button: {
+  botao: {
     backgroundColor: '#2E8B57',
     padding: 22,
     borderRadius: 20,
     alignItems: 'center',
     marginTop: 10,
   },
-
-  buttonText: {
+  textoBotao: {
     color: '#FFF',
     fontWeight: 'bold',
     fontSize: 18,

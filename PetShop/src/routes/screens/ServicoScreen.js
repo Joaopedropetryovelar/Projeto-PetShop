@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
-const SERVICOS = [
+const listaServicos = [
   { emoji: '🛁', nome: 'Banho', descricao: 'Banho completo com produtos especiais', preco: 'R$ 50,00' },
   { emoji: '✂️', nome: 'Tosa', descricao: 'Tosa higiênica ou completa', preco: 'R$ 70,00' },
   { emoji: '💉', nome: 'Vacina', descricao: 'Vacinação com acompanhamento veterinário', preco: 'R$ 90,00' },
@@ -17,22 +11,22 @@ const SERVICOS = [
 export default function ServicoScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Nossos Serviços</Text>
-      <Text style={styles.subtitle}>Escolha o melhor cuidado para o seu pet</Text>
+      <Text style={styles.titulo}>Nossos Serviços</Text>
+      <Text style={styles.subtitulo}>Escolha o melhor cuidado para o seu pet</Text>
 
-      {SERVICOS.map((item) => (
+      {listaServicos.map((item) => (
         <TouchableOpacity
           key={item.nome}
           style={styles.card}
-          onPress={() => navigation.navigate('Agendamentos')}
+          onPress={() => navigation.navigate('Agendar Horário')}
         >
           <Text style={styles.emoji}>{item.emoji}</Text>
           <View style={styles.info}>
-            <Text style={styles.nome}>{item.nome}</Text>
+            <Text style={styles.nomeServico}>{item.nome}</Text>
             <Text style={styles.descricao}>{item.descricao}</Text>
             <Text style={styles.preco}>{item.preco}</Text>
           </View>
-          <Text style={styles.arrow}>→</Text>
+          <Text style={styles.seta}>→</Text>
         </TouchableOpacity>
       ))}
 
@@ -48,12 +42,12 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 70,
   },
-  title: {
+  titulo: {
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 6,
   },
-  subtitle: {
+  subtitulo: {
     color: '#6B7280',
     fontSize: 15,
     marginBottom: 30,
@@ -73,7 +67,7 @@ const styles = StyleSheet.create({
   info: {
     flex: 1,
   },
-  nome: {
+  nomeServico: {
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -87,7 +81,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 5,
   },
-  arrow: {
+  seta: {
     fontSize: 22,
     color: '#94A3B8',
   },

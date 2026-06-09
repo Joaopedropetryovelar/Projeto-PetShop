@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { useState } from 'react';
-import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth,signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function Login({ navigation }) {
 
@@ -9,11 +9,7 @@ export default function Login({ navigation }) {
   const [senha, setSenha] = useState('');
   const [erroEmail, setErroEmail] = useState('');
   
-  
 
-  const emailValido = (valor) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
-  };
 
    const EntrarNaConta=()=>{
     if(!email || !senha){
@@ -26,7 +22,7 @@ export default function Login({ navigation }) {
     // Signed in 
     const user = userCredential.user;
     console.log(user)
-    navigation.navigate('HomeScreen')
+    navigation.navigate('Principal')
     // ...
   })
   .catch((error) => {
@@ -42,11 +38,6 @@ export default function Login({ navigation }) {
         <Text style={styles.txtLogo}>
           Pet <Text style={styles.txtLogoVerde}>Shop</Text>
         </Text>
-
-        {/* <Image
-          source={require('../../../Sources/petshop-removebg-preview.png')}
-          style={styles.imgLogo}
-        /> */}
       </View>
 
       <View style={styles.form}>
@@ -82,7 +73,7 @@ export default function Login({ navigation }) {
             onChangeText={setSenha}
           />
           <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
-            <Text style={styles.icone}>{mostrarSenha ? '🙈' : '👁'}</Text>
+            <Text style={styles.icone}>{mostrarSenha ? '👁' : '👁'}</Text>
           </TouchableOpacity>
         </View>
 

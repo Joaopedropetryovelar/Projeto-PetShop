@@ -1,91 +1,42 @@
 import React from 'react';
-
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
-
-  const petDestaque = { nome: 'Bolinha', raca: 'Golden Retriever' }; // ← dado fixo do pet
-
   return (
     <ScrollView style={styles.container}>
-    
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.hello}>Olá</Text>
-          <Text style={styles.subtitle}>Bem-vindo de volta</Text>
-        </View>
+      <View style={styles.cabecalho}>
+        <Text style={styles.ola}>Olá</Text>
+        <Text style={styles.subtitulo}>Bem-vindo de volta</Text>
       </View>
-
 
       <View style={styles.banner}>
-        <Text style={styles.bannerTitle}>
-          Seu pet merece{'\n'}o melhor cuidado 🐶
-        </Text>
-        <TouchableOpacity style={styles.bannerButton} onPress={() => navigation.navigate('Agendamentos')}>
-          <Text style={styles.bannerButtonText}>Agendar agora</Text>
+        <Text style={styles.textoBanner}>Seu pet merece{'\n'}o melhor cuidado 🐶</Text>
+        <TouchableOpacity style={styles.botaoBanner} onPress={() => navigation.navigate('Agendar Horário')}>
+          <Text style={styles.textoBotaoBanner}>Agendar agora</Text>
         </TouchableOpacity>
       </View>
 
-      {/* SERVIÇOS */}
-      <Text style={styles.section}>Serviços</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <TouchableOpacity style={styles.serviceCard} onPress={() => navigation.navigate('Servicos')}>
-          <Text style={styles.serviceEmoji}>🛁</Text>
-          <Text style={styles.serviceText}>Banho</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.serviceCard} onPress={() => navigation.navigate('Servicos')}>
-          <Text style={styles.serviceEmoji}>✂️</Text>
-          <Text style={styles.serviceText}>Tosa</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.serviceCard} onPress={() => navigation.navigate('Servicos')}>
-          <Text style={styles.serviceEmoji}>💉</Text>
-          <Text style={styles.serviceText}>Vacina</Text>
-        </TouchableOpacity>
-      </ScrollView>
-
-     
-      <View style={styles.rowTitle}>
-        <Text style={styles.section}>Meus Pets</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('MeusPets')}>
-          <Text style={styles.seeMore}>Ver todos</Text>
+      <View style={styles.linhaTitulo}>
+        <Text style={styles.secao}>Meus Pets</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Meus Pets')}>
+          <Text style={styles.verTodos}>Ver todos</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        style={styles.petCard}
-        onPress={() => navigation.navigate('DetalhePet', { pet: petDestaque })} // ← corrigido
-      >
-        <View style={styles.petImage}>
+      <TouchableOpacity style={styles.cardPet} onPress={() => navigation.navigate('Meus Pets')}>
+        <View style={styles.fotoPet}>
           <Text style={{ fontSize: 30 }}>🐶</Text>
         </View>
         <View>
-          <Text style={styles.petName}>{petDestaque.nome}</Text>
-          <Text style={styles.petInfo}>{petDestaque.raca}</Text>
+          <Text style={styles.nomePet}>Meus pets</Text>
+          <Text style={styles.racaPet}>Toque para ver</Text>
         </View>
       </TouchableOpacity>
 
-    
-      <Text style={styles.section}>Próximo Agendamento</Text>
-      <View style={styles.scheduleCard}>
-        <View>
-          <Text style={styles.scheduleTitle}>Banho e Tosa</Text>
-          <Text style={styles.scheduleInfo}>Quinta • 14:00</Text>
-        </View>
-        <Text style={styles.scheduleEmoji}>📅</Text>
-      </View>
+      <TouchableOpacity style={styles.botaoAgendamentos} onPress={() => navigation.navigate('Agendamentos')}>
+        <Text style={styles.textoBotaoAgendamentos}>📋 Meus Agendamentos</Text>
+      </TouchableOpacity>
 
-       <View style={styles.linhaContatos}>
-          <Text style={styles.registerText}>Dúvida ? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Contatos')}>
-            <Text style={styles.clique}>Clique aqui</Text>
-            </TouchableOpacity>
-        </View>
 
       <View style={{ height: 50 }} />
     </ScrollView>
@@ -99,38 +50,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 70,
   },
-
-  header: {
+  cabecalho: {
     marginBottom: 30,
   },
-
-  hello: {
+  ola: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#111827',
   },
-
-  subtitle: {
+  subtitulo: {
     color: '#6B7280',
     marginTop: 6,
     fontSize: 16,
   },
-
   banner: {
     backgroundColor: '#2E8B57',
     borderRadius: 28,
     padding: 28,
     marginBottom: 35,
   },
-
-  bannerTitle: {
+  textoBanner: {
     color: '#FFF',
     fontSize: 28,
     fontWeight: 'bold',
     lineHeight: 38,
   },
-
-  bannerButton: {
+  botaoBanner: {
     backgroundColor: '#FFF',
     marginTop: 22,
     alignSelf: 'flex-start',
@@ -138,125 +83,97 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 16,
   },
-
-  bannerButtonText: {
+  textoBotaoBanner: {
     color: '#2E8B57',
     fontWeight: 'bold',
     fontSize: 16,
   },
-
-  section: {
+  secao: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#111827',
   },
-
-  serviceCard: {
+  cardServico: {
     width: 110,
     height: 120,
     backgroundColor: '#FFF',
     borderRadius: 24,
     marginRight: 16,
-
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  serviceEmoji: {
+  emoji: {
     fontSize: 34,
     marginBottom: 12,
   },
-
-  serviceText: {
+  nomeServico: {
     fontWeight: 'bold',
     fontSize: 16,
   },
-
-  rowTitle: {
+  linhaTitulo: {
     marginTop: 35,
     marginBottom: 10,
-
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-
-  seeMore: {
+  verTodos: {
     color: '#2E8B57',
     fontWeight: 'bold',
   },
-
-  petCard: {
+  cardPet: {
     backgroundColor: '#FFF',
     borderRadius: 24,
     padding: 20,
-
     flexDirection: 'row',
     alignItems: 'center',
-
     marginBottom: 35,
   },
-
-  petImage: {
+  fotoPet: {
     width: 70,
     height: 70,
     backgroundColor: '#DCFCE7',
     borderRadius: 20,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     marginRight: 18,
   },
-
-  petName: {
+  nomePet: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-
-  petInfo: {
+  racaPet: {
     color: '#6B7280',
     marginTop: 5,
   },
-
-  scheduleCard: {
-    backgroundColor: '#FFF',
-    borderRadius: 24,
-    padding: 24,
-
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  scheduleTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-
-  scheduleInfo: {
-    color: '#6B7280',
-    marginTop: 6,
-  },
-
-  scheduleEmoji: {
-    fontSize: 34,
-  },
-  linhaContatos: {
+  linhaContato: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
   },
-  registerText: {
+  textoNormal: {
     fontSize: 15,
-    fontWeight: '500',
     color: '#555',
-    textAlign: 'center',
   },
-  clique: {
+  link: {
     color: '#1bd14f',
     fontWeight: 'bold',
-  }
+  },
+  botaoAgendamentos: {
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+    borderWidth: 1.5,
+    borderColor: '#2E8B57',
+  },
+  textoBotaoAgendamentos: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2E8B57',
+  },
 });
