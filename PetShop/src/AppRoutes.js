@@ -1,4 +1,5 @@
 import React from "react";
+import { Image } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -13,6 +14,7 @@ import CadastroPetScreen from "./routes/screens/CadastroPetSreen";
 import AgendamentoScreen from "./routes/screens/AgendamentoScreen";
 import MeusAgendamentosScreen from "./routes/screens/MeusAgendamentosScreen";
 import ServicoScreen from "./routes/screens/ServicoScreen";
+import TelaAdminPagamento from "./routes/screens/TelaAdminPagamento";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,16 +25,41 @@ function BottomTabs() {
       <Tab.Screen
         name="Pet Shop" 
         component={HomeScreen}
+         options={{
+          tabBarIcon: ({ size }) => (
+            <Image
+              source={require('../Sources/casa.png')}
+              style={{ width: size, height: size }}
+            />
+          ),
+        }}
         
       />
      <Tab.Screen
         name="Serviços"
         component={ServicoScreen}
+        options={{
+          tabBarIcon: ({ size }) => (
+            <Image
+              source={require('../Sources/patas.png')}
+              style={{ width: size, height: size }}
+            />
+          ),
+        }}
+        
       />
 
        <Tab.Screen
         name="Contatos"
         component={Contatos}
+         options={{
+          tabBarIcon: ({ size }) => (
+            <Image
+              source={require('../Sources/telefone.png')}
+              style={{ width: size, height: size }}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
@@ -57,6 +84,11 @@ export default function AppRoutes() {
           name="Principal"
           component={BottomTabs}
           options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Sistema Administrativo"
+          component={TelaAdminPagamento}
         />
 
         <Stack.Screen

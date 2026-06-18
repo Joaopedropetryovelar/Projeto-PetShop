@@ -42,11 +42,6 @@ export default function Cadastro({ navigation }) {
         <Text style={styles.txtLogo}>
           Pet <Text style={styles.txtLogoVerde}>Shop</Text>
         </Text>
-
-        {/* <Image
-          source={require("../../../Sources/petshop-removebg-preview.png")}
-          style={styles.imgLogo}
-        /> */}
       </View>
 
     
@@ -110,7 +105,7 @@ export default function Cadastro({ navigation }) {
             onChangeText={setSenha}
           />
           <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
-            <Text style={styles.icone}>{mostrarSenha ? '🙈' : '👁'}</Text>
+            <Text style={styles.icone}>{mostrarSenha ? '👁' : '👁'}</Text>
           </TouchableOpacity>
         </View>
 

@@ -1,8 +1,29 @@
 import React from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Linking, Alert } from "react-native";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
+const WHATSAPP_LINK = "5548999680303"; // Depois coloque aqui o link. Ex: https://wa.me/5511999999999
+
 export default function Contatos({ navigation }) {
+  async function abrirWhatsApp() {
+    if (!WHATSAPP_LINK) {
+      Alert.alert("WhatsApp", "Adicione o link do WhatsApp na constante WHATSAPP_LINK.");
+      return;
+    }
+
+    try {
+      const podeAbrir = await Linking.canOpenURL(WHATSAPP_LINK);
+
+      if (podeAbrir) {
+        await Linking.openURL(WHATSAPP_LINK);
+      } else {
+        Alert.alert("Erro", "Nao foi possivel abrir o link do WhatsApp.");
+      }
+    } catch (erro) {
+      Alert.alert("Erro", "Nao foi possivel abrir o link do WhatsApp.");
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
 
@@ -21,22 +42,9 @@ export default function Contatos({ navigation }) {
         <CardContato
           icone={<FontAwesome5 name="whatsapp" size={24} color="#22c55e" />}
           titulo="WhatsApp"
-          info="(11) 98765-4321"
+          info="(48) 99968-0303"
+          onPress={abrirWhatsApp}
           sub="Atendimento rápido"
-        />
-
-        <CardContato
-          icone={<Ionicons name="call-outline" size={24} color="#1bd14f" />}
-          titulo="Telefone"
-          info="(11) 3456-7890"
-          sub="Seg a Sex, 8h às 18h"
-        />
-
-        <CardContato
-          icone={<MaterialIcons name="email" size={24} color="#1bd14f" />}
-          titulo="E-mail"
-          info="contato@petshop.com.br"
-          sub="Respondemos em até 24h"
         />
 
         <CardContato
@@ -50,8 +58,7 @@ export default function Contatos({ navigation }) {
           <Ionicons name="time-outline" size={26} color="#1bd14f" />
           <View style={{ marginLeft: 14 }}>
             <Text style={styles.horarioTitulo}>Horário de atendimento</Text>
-            <Text style={styles.horarioTexto}>Segunda a Sexta: 8h às 18h</Text>
-            <Text style={styles.horarioTexto}>Sábado: 8h às 13h</Text>
+            <Text style={styles.horarioTexto}>Segunda a Sexta: 9h às 16h</Text>
           </View>
         </View>
 
@@ -65,9 +72,9 @@ export default function Contatos({ navigation }) {
   );
 }
 
-function CardContato({ icone, titulo, info, sub }) {
+function CardContato({ icone, titulo, info, sub, onPress }) {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress} disabled={!onPress}>
       <View style={styles.caixaIcone}>{icone}</View>
 
       <View style={{ flex: 1 }}>

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, updateDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { database } from '../../../FireBaseConfig';
 
-export default function CadastroPetScreen({navigation}) {
+export default function CadastroPetScreen({ route, navigation }) {
+  const pet = route?.params?.pet;
+
   const [nome, setNome] = useState('');
   const [raca, setRaca] = useState('');
   const [idade, setIdade] = useState('');
@@ -14,41 +16,126 @@ export default function CadastroPetScreen({navigation}) {
   const [alergia, setAlergia] = useState('');
   const [obs, setObs] = useState('');
 
-  async function salvarPet() {
-    // Pega o usuário logado para associar o pet a ele
-    const auth = getAuth();
-    const usuario = auth.currentUser;
-
-    if (!usuario) {
-      Alert.alert('Erro', 'Nenhum usuário logado.');
-      return;
+  useEffect(() => {
+    if (pet) {
+      setNome(pet.nome || '');
+      setRaca(pet.raca || '');
+      setIdade(pet.idade || '');
+      setPeso(pet.peso || '');
+      setSexo(pet.sexo || '');
+      setCastrado(pet.castrado || '');
+      setAlergia(pet.alergia || '');
+      setObs(pet.obs || '');
     }
+  }, [pet]);
 
-    try {
-      await addDoc(collection(database, 'Pets'), {
-        nome,
-        raca,
-        idade,
-        peso,
-        sexo,
-        castrado,
-        alergia,
-        obs,
-        uid: usuario.uid, // <-- salva o dono do pet
-      });
-      setNome(''); setRaca(''); setIdade(''); setPeso('');
-      setSexo(''); setCastrado(''); setAlergia(''); setObs('');
-      Alert.alert('Pet cadastrado com sucesso!');
-      navigation.navigate('Principal')
-    } catch (erro) {
-      console.log('erro ao cadastrar', erro);
-      Alert.alert('Erro ao cadastrar pet.');
-    }
+ async function salvarPet() {
+
+  if (
+    !nome.trim() ||
+    !raca.trim() ||
+    !idade.trim() ||
+    !peso.trim() ||
+    !sexo ||
+    !castrado
+  ) {
+    Alert.alert(
+      "Campos obrigatórios",
+      "Preencha Nome, Raça, Idade, Peso, Sexo e Castrado."
+    );
+    return;
   }
+
+  const usuario = getAuth().currentUser;
+
+  if (!usuario) {
+    Alert.alert(
+      "Erro",
+      "Nenhum usuário está logado."
+    );
+    return;
+  }
+
+  try {
+
+    const dadosPet = {
+      nome,
+      raca,
+      idade,
+      peso,
+      sexo,
+      castrado,
+      alergia,
+      obs,
+      uid: usuario.uid
+    };
+
+    if (pet && pet.id) {
+      const petAtualizado = {
+        id: pet.id,
+        ...dadosPet
+      };
+
+      await updateDoc(
+        doc(database, 'Pets', pet.id),
+        dadosPet
+      );
+
+      Alert.alert(
+        'Sucesso',
+        'Dados do pet atualizados.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate({
+              name: 'Informações Pet',
+              params: { pet: petAtualizado },
+              merge: true
+            })
+          }
+        ]
+      );
+
+    } else {
+
+      await addDoc(
+        collection(database, 'Pets'),
+        dadosPet
+      );
+
+      setNome('');
+      setRaca('');
+      setIdade('');
+      setPeso('');
+      setSexo('');
+      setCastrado('');
+      setAlergia('');
+      setObs('');
+
+      Alert.alert(
+        'Sucesso',
+        'Pet cadastrado com sucesso!',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Principal')
+          }
+        ]
+      );
+    }
+
+  } catch (erro) {
+    console.log('Erro ao salvar pet:', erro);
+    Alert.alert(
+      'Erro',
+      erro.message || 'Não foi possível salvar o pet.'
+    );
+  }
+}
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.titulo}>Cadastro do Pet</Text>
+      <Text style={styles.titulo}>{pet ? 'Editar Pet' : 'Cadastro do Pet'}</Text>
 
       <TextInput placeholder="Nome do Pet" style={styles.input} value={nome} onChangeText={setNome} />
       <TextInput placeholder="Raça" style={styles.input} value={raca} onChangeText={setRaca} />
@@ -91,7 +178,7 @@ export default function CadastroPetScreen({navigation}) {
       />
 
       <TouchableOpacity style={styles.botao} onPress={salvarPet}>
-        <Text style={styles.textoBotao}>Cadastrar Pet</Text>
+        <Text style={styles.textoBotao}>{pet ? 'Salvar alterações' : 'Cadastrar Pet'}</Text>
       </TouchableOpacity>
 
       <View style={{ height: 50 }} />

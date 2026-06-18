@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { database } from '../../../FireBaseConfig';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MeusPetsScreen({ navigation }) {
   const [pets, setPets] = useState([]);
 
-  useEffect(() => {
-    buscarPets();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      carregarPets();
+    }, [])
+  );
 
-  async function buscarPets() {
+  async function carregarPets() {
+    const usuario = getAuth().currentUser;
+    if (!usuario) return;
+
     try {
-      const auth = getAuth();
-      const usuario = auth.currentUser;
-
-      if (!usuario) return;
-
-      // Filtra apenas os pets do usuário logado pelo campo uid
-      const q = query(collection(database, 'Pets'), where('uid', '==', usuario.uid));
-      const resultado = await getDocs(q);
-      const lista = resultado.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setPets(lista);
-    } catch (erro) {
-      console.log(erro);
+      const resultado = await getDocs(
+        query(collection(database, 'Pets'), where('uid', '==', usuario.uid))
+      );
+      setPets(resultado.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (e) {
+      console.log('Erro ao carregar pets:', e);
     }
   }
 
@@ -36,7 +36,7 @@ export default function MeusPetsScreen({ navigation }) {
         <Text style={styles.semPets}>Você ainda não cadastrou nenhum pet.</Text>
       )}
 
-      {pets.map((pet) => (
+      {pets.map(pet => (
         <TouchableOpacity
           key={pet.id}
           style={styles.card}
@@ -50,7 +50,10 @@ export default function MeusPetsScreen({ navigation }) {
         </TouchableOpacity>
       ))}
 
-      <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Cadastro Pet')}>
+      <TouchableOpacity
+        style={styles.botao}
+        onPress={() => navigation.navigate('Cadastro Pet')}
+      >
         <Text style={styles.textoBotao}>+ Adicionar Pet</Text>
       </TouchableOpacity>
     </ScrollView>
