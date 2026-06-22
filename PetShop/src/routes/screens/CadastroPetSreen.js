@@ -84,16 +84,7 @@ export default function CadastroPetScreen({ route, navigation }) {
       Alert.alert(
         'Sucesso',
         'Dados do pet atualizados.',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate({
-              name: 'Informações Pet',
-              params: { pet: petAtualizado },
-              merge: true
-            })
-          }
-        ]
+        navigation.navigate('Principal')
       );
 
     } else {
@@ -115,12 +106,7 @@ export default function CadastroPetScreen({ route, navigation }) {
       Alert.alert(
         'Sucesso',
         'Pet cadastrado com sucesso!',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('Principal')
-          }
-        ]
+        navigation.navigate('Principal')
       );
     }
 

@@ -37,6 +37,9 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.textoBotaoAgendamentos}>📋 Meus Agendamentos</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.linkAdmin} onPress={() => navigation.navigate('Admin')}>
+        <Text style={styles.textoLinkAdmin}>🛠️ Painel administrativo</Text>
+      </TouchableOpacity>
 
       <View style={{ height: 50 }} />
     </ScrollView>
@@ -175,5 +178,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#2E8B57',
+  },
+  linkAdmin: {
+    alignItems: 'center',
+    marginTop: 6,
+    marginBottom: 10,
+  },
+  textoLinkAdmin: {
+    color: '#9CA3AF',
+    fontWeight: '600',
+    fontSize: 13,
   },
 });

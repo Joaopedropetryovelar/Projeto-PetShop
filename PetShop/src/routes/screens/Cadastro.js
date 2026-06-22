@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
-import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import app from '../../../FireBaseConfig';
 
 export default function Cadastro({ navigation }) {
@@ -11,49 +11,42 @@ export default function Cadastro({ navigation }) {
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
 
-
-  const CriarConta=()=>{
-    if(!nome || !email || !telefone || !senha){
-      Alert.alert("preencha todos os campos!!!")
+  const CriarConta = () => {
+    if (!nome || !email || !telefone || !senha) {
+      console.log('validacao falhou, campo vazio');
+      Alert.alert("preencha todos os campos!!!");
       return;
     }
-          const auth = getAuth(app);
-          createUserWithEmailAndPassword(auth, email, senha)
-          .then((userCredential) => {
-              console.log('conta criada');
-          // Signed up 
-          const user = userCredential.user;
-          console.log(user)
-          navigation.navigate('Principal')
-          // ...
-          })
-           .catch((error) => {
-              console.log(error);
-              Alert.alert(error.message);
-          // ..
-        });
-      }
+
+    const auth = getAuth(app);
+
+    createUserWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigation.navigate('Principal');
+      })
+      .catch((error) => {
+        console.log('ERRO no catch:', error.code, error.message);
+        Alert.alert(error.message);
+      });
+  }
 
   return (
     <View style={styles.container}>
 
-      
       <View style={styles.header}>
         <Text style={styles.txtLogo}>
           Pet <Text style={styles.txtLogoVerde}>Shop</Text>
         </Text>
       </View>
 
-    
       <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
 
         <Text style={styles.bemVindo}>Criar conta</Text>
         <Text style={styles.subTitulo}>Preencha os dados para se cadastrar</Text>
 
-     
         <Text style={styles.label}>Nome</Text>
         <View style={styles.caixaInput}>
-         
           <TextInput
             placeholder="digite seu nome..."
             placeholderTextColor="#aaa"
@@ -63,10 +56,8 @@ export default function Cadastro({ navigation }) {
           />
         </View>
 
-      
         <Text style={styles.label}>Email</Text>
         <View style={styles.caixaInput}>
-
           <TextInput
             placeholder="digite seu email..."
             placeholderTextColor="#aaa"
@@ -78,10 +69,8 @@ export default function Cadastro({ navigation }) {
           />
         </View>
 
-       
         <Text style={styles.label}>Telefone</Text>
         <View style={styles.caixaInput}>
-         
           <TextInput
             placeholder="(00) 00000-0000"
             placeholderTextColor="#aaa"
@@ -92,10 +81,8 @@ export default function Cadastro({ navigation }) {
           />
         </View>
 
-     
         <Text style={styles.label}>Senha</Text>
         <View style={styles.caixaInput}>
-         
           <TextInput
             placeholder="Crie sua senha..."
             placeholderTextColor="#aaa"
@@ -109,12 +96,10 @@ export default function Cadastro({ navigation }) {
           </TouchableOpacity>
         </View>
 
-     
         <TouchableOpacity style={styles.botao} activeOpacity={0.8} onPress={CriarConta}>
           <Text style={styles.txtBotao}>Cadastrar</Text>
         </TouchableOpacity>
 
-       
         <View style={styles.linhaCadastro}>
           <Text style={styles.registerText}>Já possui conta? </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -122,7 +107,6 @@ export default function Cadastro({ navigation }) {
           </TouchableOpacity>
         </View>
 
-       
         <View style={{ height: 30 }} />
 
       </ScrollView>
@@ -132,14 +116,11 @@ export default function Cadastro({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     paddingTop: 45,
     backgroundColor: "#000033",
   },
-
- 
   header: {
     paddingHorizontal: 15,
     height: 170,
@@ -162,7 +143,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginTop: 8,
   },
-
   form: {
     flex: 1,
     backgroundColor: "#ffffff",
@@ -171,7 +151,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingHorizontal: 22,
   },
-
   bemVindo: {
     fontSize: 22,
     fontWeight: "bold",
@@ -183,7 +162,6 @@ const styles = StyleSheet.create({
     color: '#888',
     marginBottom: 24,
   },
-
   label: {
     fontSize: 13,
     fontWeight: "600",
@@ -192,8 +170,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-
- 
   caixaInput: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -206,14 +182,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     gap: 8,
   },
- 
   input: {
     flex: 1,
     fontSize: 15,
     color: '#111',
   },
-
-
   botao: {
     backgroundColor: "#1bd14f",
     paddingVertical: 15,
@@ -228,8 +201,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     letterSpacing: 0.5,
   },
-
-
   linhaCadastro: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -246,5 +217,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
-
 });

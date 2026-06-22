@@ -15,7 +15,7 @@ import { getAuth } from 'firebase/auth';
 
 import { database } from '../../../FireBaseConfig';
 
-export default function MeusAgendamentosScreen() {
+export default function MeusAgendamentosScreen({ navigation }) {
 
   const [lista, setLista] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -103,7 +103,11 @@ export default function MeusAgendamentosScreen() {
 
         ) : (
 
-          lista.map(item => (
+          lista.map(item => {
+
+            const status = item.status || 'confirmado';
+
+            return (
 
             <View
               key={item.id}
@@ -130,6 +134,39 @@ export default function MeusAgendamentosScreen() {
                 📅 {item.data} às {item.horario}
               </Text>
 
+              <View
+                style={[
+                  styles.badge,
+                  status === 'pendente_pagamento' && styles.badgePendente,
+                  status === 'confirmado' && styles.badgeConfirmado,
+                  status === 'cancelado' && styles.badgeCancelado
+                ]}
+              >
+                <Text style={styles.textoBadge}>
+                  {status === 'pendente_pagamento' && 'Pagamento pendente'}
+                  {status === 'confirmado' && 'Confirmado'}
+                  {status === 'cancelado' && 'Cancelado'}
+                </Text>
+              </View>
+
+              {status === 'pendente_pagamento' && (
+                <TouchableOpacity
+                  style={styles.botaoPagar}
+                  onPress={() => navigation.navigate('Pagamento', {
+                    agendamentoId: item.id,
+                    servico: item.servico,
+                    preco: item.preco,
+                    data: item.data,
+                    hora: item.horario,
+                    nomePet: item.nomePet
+                  })}
+                >
+                  <Text style={styles.textoPagar}>
+                    Pagar com Pix
+                  </Text>
+                </TouchableOpacity>
+              )}
+
               <TouchableOpacity
                 style={styles.botaoCancelar}
                 onPress={() => setAgendamento(item)}
@@ -141,11 +178,12 @@ export default function MeusAgendamentosScreen() {
 
             </View>
 
-          ))
+            );
+          })
 
         )}
 
-      </ScrollView>
+     </ScrollView>
 
       <Modal
         visible={agendamento !== null}
@@ -189,12 +227,13 @@ export default function MeusAgendamentosScreen() {
           </View>
 
         </View>
-
       </Modal>
 
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
 
@@ -249,6 +288,46 @@ const styles = StyleSheet.create({
   info: {
     marginBottom: 5,
     color: '#444',
+  },
+
+  badge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+    marginTop: 4,
+    marginBottom: 10,
+  },
+
+  badgePendente: {
+    backgroundColor: '#FFF1C2',
+  },
+
+  badgeConfirmado: {
+    backgroundColor: '#DCFCE7',
+  },
+
+  badgeCancelado: {
+    backgroundColor: '#FEE2E2',
+  },
+
+  textoBadge: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    color: '#444',
+  },
+
+  botaoPagar: {
+    backgroundColor: '#2E8B57',
+    borderRadius: 10,
+    padding: 12,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+
+  textoPagar: {
+    color: '#FFF',
+    fontWeight: 'bold',
   },
 
   botaoCancelar: {

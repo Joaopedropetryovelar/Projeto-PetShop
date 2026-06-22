@@ -14,7 +14,8 @@ import CadastroPetScreen from "./routes/screens/CadastroPetSreen";
 import AgendamentoScreen from "./routes/screens/AgendamentoScreen";
 import MeusAgendamentosScreen from "./routes/screens/MeusAgendamentosScreen";
 import ServicoScreen from "./routes/screens/ServicoScreen";
-import TelaAdminPagamento from "./routes/screens/TelaAdminPagamento";
+import PagamentoScreen from "./routes/screens/PagamentoScreen";
+import AdminScreen from "./routes/screens/AdminScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -86,10 +87,6 @@ export default function AppRoutes() {
           options={{ headerShown: false }}
         />
 
-        <Stack.Screen
-          name="Sistema Administrativo"
-          component={TelaAdminPagamento}
-        />
 
         <Stack.Screen
           name="Meus Pets"
@@ -114,6 +111,16 @@ export default function AppRoutes() {
         <Stack.Screen
           name="Agendamentos"
           component={MeusAgendamentosScreen}
+        />
+
+        <Stack.Screen
+          name="Pagamento"
+          component={PagamentoScreen}
+        />
+
+        <Stack.Screen
+          name="Admin"
+          component={AdminScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

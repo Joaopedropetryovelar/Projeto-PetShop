@@ -9,11 +9,14 @@ import {
 } from 'react-native';
 
 import { Picker } from '@react-native-picker/picker';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 import { database } from '../../../FireBaseConfig';
 import { Profissionais } from '../../Data/Profissional';
+
+import { valorParaNumero, gerarTxId, gerarPayloadPix } from '../../../utils/pix';
+
 
 const horariosPadrao = [
   '09:00',
@@ -150,24 +153,24 @@ export default function AgendamentoScreen({ route, navigation }) {
 
     try {
       const uid = getAuth().currentUser?.uid;
+      const emailCliente = getAuth().currentUser?.email || null;
 
-      await addDoc(
+      const novoAgendamento = await addDoc(
         collection(database, 'Agendamento'),
         {
           petId: petSelecionado.id,
           nomePet: petSelecionado.nome,
           servico: servico,
           preco: servicoSelecionado.preco,
+          valorNumerico: valorParaNumero(servicoSelecionado.preco),
           horario: hora,
           data: data,
           Profissional:Profissional,
-          uid: uid
+          uid: uid,
+          emailCliente: emailCliente,
+          status: 'pendente_pagamento',
+          criadoEm: serverTimestamp()
         }
-      );
-
-      Alert.alert(
-        'Sucesso',
-        `${servico} agendado para ${data} às ${hora}`
       );
 
       setPet('');
@@ -175,7 +178,15 @@ export default function AgendamentoScreen({ route, navigation }) {
       setHora('');
 
       carregarHorarios(data);
-      navigation.navigate('Principal')
+
+      navigation.navigate('Pagamento', {
+        agendamentoId: novoAgendamento.id,
+        servico: servico,
+        preco: servicoSelecionado.preco,
+        data: data,
+        hora: hora,
+        nomePet: petSelecionado.nome
+      });
 
     } catch (erro) {
       console.log('Erro ao agendar:', erro);

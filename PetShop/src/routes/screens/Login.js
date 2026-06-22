@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } fro
 import { useState } from 'react';
 import { getAuth,signInWithEmailAndPassword } from 'firebase/auth';
 
+
 export default function Login({ navigation }) {
 
   const [mostrarSenha, setMostrarSenha] = useState(false);
