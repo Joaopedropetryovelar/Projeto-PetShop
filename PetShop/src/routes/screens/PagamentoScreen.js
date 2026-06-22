@@ -15,7 +15,7 @@ import { doc, onSnapshot, updateDoc, serverTimestamp } from 'firebase/firestore'
 
 import { database } from '../../../FireBaseConfig';
 
-const CHAVE_PIX_FIXA = '10341637955';
+const CHAVE_PIX_FIXA = '779.909.439-72';
 
 export default function PagamentoScreen({ route, navigation }) {
   const {

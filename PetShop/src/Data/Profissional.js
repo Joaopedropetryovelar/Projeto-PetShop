@@ -7,7 +7,7 @@ export const Profissionais=[
     {
         id:'2',
         nome:'Guilherme',
-        Funcao:'veterinário'
+        Funcao:'Atendente'
 
     }
 ];

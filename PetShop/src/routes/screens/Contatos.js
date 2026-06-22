@@ -51,7 +51,7 @@ export default function Contatos({ navigation }) {
           icone={<Ionicons name="location-outline" size={24} color="#1bd14f" />}
           titulo="Endereço"
           info="Rua das Patinhas, 123"
-          sub="São Paulo/SP"
+          sub="Balneário Rincão/SC"
         />
 
         <View style={styles.cardHorario}>
