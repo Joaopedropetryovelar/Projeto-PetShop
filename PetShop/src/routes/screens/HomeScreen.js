@@ -41,6 +41,12 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.textoLinkAdmin}>🛠️ Painel administrativo</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.linkAdmin} onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.textoLinkAdmin}>Sair</Text>
+      </TouchableOpacity>
+
+   
+
       <View style={{ height: 50 }} />
     </ScrollView>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Linking, Alert } from "react-native";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
-const WHATSAPP_LINK = "5548999680303"; // Depois coloque aqui o link. Ex: https://wa.me/5511999999999
+const WHATSAPP_LINK = "5548999680303"; 
 
 export default function Contatos({ navigation }) {
   async function abrirWhatsApp() {
@@ -58,7 +58,7 @@ export default function Contatos({ navigation }) {
           <Ionicons name="time-outline" size={26} color="#1bd14f" />
           <View style={{ marginLeft: 14 }}>
             <Text style={styles.horarioTitulo}>Horário de atendimento</Text>
-            <Text style={styles.horarioTexto}>Segunda a Sexta: 9h às 16h</Text>
+            <Text style={styles.horarioTexto}>Segunda a Sábado: 9h às 16h</Text>
           </View>
         </View>
 
